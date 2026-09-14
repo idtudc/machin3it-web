@@ -1,0 +1,146 @@
+/**
+ * -------------------------------------------------------------------------
+ * HOJA DE ESTILOS GLOBAL - MACHIN3 IT
+ * -------------------------------------------------------------------------
+ */
+:root {
+    --primary-dark: #0f172a;    
+    --primary-slate: #1e293b;   
+    --accent-orange: #f97316;   
+    --bg-light: #f8fafc;        
+    --text-main: #334155;       
+}
+
+body { font-family: Arial, sans-serif; background-color: var(--bg-light); margin: 0; color: var(--text-main); line-height: 1.6; }
+
+/* Barra de navegación superior unificada */
+.navbar { background-color: var(--primary-dark); padding: 15px 40px; color: white; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; border-bottom: 3px solid var(--accent-orange); }
+.navbar h2 a { color: white; text-decoration: none; font-size: 22px; letter-spacing: 0.5px; }
+.nav-links { display: flex; gap: 15px; align-items: center; flex-wrap: wrap; }
+.nav-links a { color: #cbd5e1; text-decoration: none; font-size: 14px; padding: 6px 12px; border-radius: 4px; transition: 0.3s; background-color: transparent; }
+.nav-links a:hover { color: white; background-color: rgba(255,255,255,0.08); }
+.nav-links a.active { color: white; font-weight: bold; background-color: rgba(255,255,255,0.15); }
+.btn-login { background-color: var(--accent-orange) !important; color: white !important; font-weight: bold; }
+.btn-login:hover { background-color: #ea580c !important; }
+
+/* Contenedores generales */
+.container { padding: 40px; max-width: 1200px; margin: 0 auto; }
+.header-title { color: var(--primary-dark); text-align: center; border-bottom: 2px solid #cbd5e1; padding-bottom: 10px; margin-bottom: 30px; }
+
+/* Cuadrícula adaptable para el catálogo */
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+.card { background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.04); display: flex; flex-direction: column; justify-content: space-between; border-top: 4px solid var(--primary-slate); }
+.category { font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px; }
+.card h3 { color: var(--primary-dark); margin: 5px 0 10px 0; font-size: 18px; }
+.desc { color: #64748b; font-size: 14px; line-height: 1.5; flex-grow: 1; }
+.price { font-weight: bold; color: #047857; font-size: 18px; margin: 15px 0; }
+
+/* Botón de acción en cada tarjeta */
+.btn { padding: 10px; background-color: transparent; color: var(--primary-dark); border: 2px solid var(--primary-dark); border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; text-align: center; display: block; text-decoration: none; box-sizing: border-box; }
+.btn:hover { background-color: var(--primary-dark); color: white; }
+
+/* =========================================
+   MÓDULO DE AUTENTICACIÓN (Login y Registro)
+   ========================================= */
+.auth-wrapper { 
+    display: flex; justify-content: center; align-items: center; 
+    min-height: 100vh; background-color: var(--bg-light); 
+}
+.login-box { 
+    background-color: white; padding: 40px; border-radius: 8px; 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.04); width: 350px; 
+    border-top: 4px solid var(--accent-orange); 
+}
+.login-box .header-title { margin-top: 0; margin-bottom: 25px; font-size: 22px; border-bottom: none; }
+.form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
+.form-group label { font-weight: bold; color: var(--primary-slate); font-size: 13px; }
+.form-group input { padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; }
+.form-group input:focus { outline: none; border-color: var(--accent-orange); }
+.btn-submit { 
+    padding: 12px; background-color: var(--primary-dark); color: white; 
+    border: none; border-radius: 6px; font-weight: bold; cursor: pointer; 
+    width: 100%; transition: 0.3s; margin-top: 10px; 
+}
+.btn-submit:hover { background-color: var(--primary-slate); }
+.back-home { display: block; text-align: center; margin-top: 20px; font-size: 13px; color: #64748b; text-decoration: none; font-weight: bold; }
+.back-home:hover { color: var(--accent-orange); }
+
+/* =========================================
+   MÓDULO: PÁGINA PRINCIPAL (Index)
+   ========================================= */
+.hero { background: linear-gradient(rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.92)), url('https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80') center/cover; color: white; text-align: center; padding: 80px 20px; }
+.hero-brand { font-size: 48px; font-weight: bold; margin: 0 0 5px 0; letter-spacing: 1px; color: white; }
+.hero h1 { font-size: 32px; margin: 0 0 15px 0; font-weight: normal; color: #e2e8f0; }
+.hero p { font-size: 16px; max-width: 700px; margin: 0 auto 30px auto; color: #94a3b8; }
+.hero-btns { display: flex; gap: 15px; justify-content: center; }
+
+.btn-outline { padding: 12px 25px; background-color: transparent; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; border: 2px solid rgba(255, 255, 255, 0.8); transition: 0.3s; }
+.btn-outline:hover { background-color: rgba(255, 255, 255, 0.1); border-color: white; }
+
+.info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-bottom: 50px; }
+.info-card { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.04); border-top: 4px solid var(--accent-orange); }
+.info-card h3 { color: var(--primary-dark); margin-top: 0; }
+
+.partners-section { text-align: center; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.04); margin-bottom: 50px; border: 1px solid #e2e8f0; }
+.partners-grid { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 20px; }
+.partner-badge { padding: 8px 18px; background-color: #f1f5f9; border-radius: 6px; font-weight: bold; color: #475569; border: 1px solid #cbd5e1; }
+
+footer { background-color: var(--primary-dark); color: #94a3b8; text-align: center; padding: 30px; font-size: 14px; border-top: 1px solid #334155; }
+
+/* =========================================
+   MÓDULO: PANEL ADMINISTRATIVO (Dashboard)
+   ========================================= */
+.admin-nav-controls { display: flex; gap: 15px; align-items: center; }
+.admin-nav-controls a.nav-text { background-color: transparent; color: #cbd5e1; padding: 6px 12px; border-radius: 4px; font-size: 14px; text-decoration: none; transition: 0.3s; }
+.admin-nav-controls a.nav-text:hover { color: white; background-color: rgba(255,255,255,0.08); }
+.admin-nav-controls span { color: #cbd5e1; font-size: 14px; }
+
+.dashboard-panel { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.04); }
+.dashboard-panel h2, .dashboard-panel h3 { color: var(--primary-dark); margin-top: 0; }
+.dashboard-panel.welcome-panel { margin-bottom: 30px; border-top: 4px solid var(--primary-slate); }
+.dashboard-panel.actions-panel { margin-top: 30px; border-top: 4px solid var(--primary-slate); }
+.dashboard-panel h3.actions-title { border-bottom: 2px solid #cbd5e1; padding-bottom: 10px; }
+
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+.stat-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.04); text-align: center; }
+.stat-card.blue { border-top: 4px solid var(--primary-slate); }
+.stat-card.orange { border-top: 4px solid var(--accent-orange); }
+.stat-card.green { border-top: 4px solid #047857; }
+.stat-card h3 { margin: 0; color: #64748b; font-size: 14px; }
+.stat-card p { font-size: 24px; color: var(--primary-dark); font-weight: bold; margin: 10px 0 0 0; }
+
+.actions-grid { display: flex; gap: 15px; margin-top: 15px; flex-wrap: wrap; }
+.action-btn { padding: 10px 20px; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 14px; transition: 0.3s; }
+.action-btn.dark { background-color: var(--primary-dark); }
+.action-btn.slate { background-color: var(--primary-slate); }
+.action-btn.green { background-color: #047857; }
+.action-btn:hover { filter: brightness(1.2); }
+
+/* =========================================
+   MÓDULO: COTIZADOR DINÁMICO
+   ========================================= */
+.cotizador-box { background-color: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.04); border-top: 4px solid var(--primary-slate); }
+.cotizador-desc { color: #64748b; text-align: center; font-size: 14px; margin-top: 10px; }
+.cotizador-form { margin-top: 20px; }
+
+.servicio-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #e2e8f0; }
+.servicio-label { cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 15px; color: var(--text-main); }
+.servicio-precio { font-weight: bold; color: #047857; }
+
+.total-box { margin-top: 30px; padding: 20px; background-color: var(--bg-light); border: 1px solid #cbd5e1; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; }
+.total-title { margin: 0; color: var(--primary-dark); font-size: 20px; }
+.total-subtitle { font-size: 13px; color: #64748b; }
+.total-amount { font-size: 24px; color: #047857; font-weight: bold; }
+
+.btn-print-container { margin-top: 20px; text-align: right; }
+
+/* =========================================
+   MÓDULO: REGISTRO DE SOLICITUD (Tickets)
+   ========================================= */
+.ticket-box { background-color: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.04); border-top: 4px solid var(--primary-slate); max-width: 700px; margin: 0 auto; }
+.form-row { display: flex; gap: 15px; margin-bottom: 15px; }
+.form-col { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+.form-col-2 { flex: 2; display: flex; flex-direction: column; gap: 5px; }
+.form-label { font-weight: bold; color: var(--primary-slate); font-size: 13px; }
+.form-input { padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; }
+.form-input:focus { outline: none; border-color: var(--accent-orange); }
