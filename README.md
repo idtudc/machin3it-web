@@ -25,3 +25,4 @@ Este repositorio contiene el código fuente correspondiente al **Producto Acadé
 **Desarrollador:** Michael Roger Mamani  
 **Institución:** Universidad Continental  
 **Entrega:** Producto Académico 2 (Proyecto segunda etapa)
+**by Mike**
