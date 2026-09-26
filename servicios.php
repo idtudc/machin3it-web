@@ -3,173 +3,107 @@
  * -------------------------------------------------------------------------
  * SISTEMA WEB DE GESTIÓN TÉCNICA - MACHIN3 IT
  * -------------------------------------------------------------------------
- * Módulo: Catálogo de Servicios (servicios.php)
- * Descripción: Muestra de manera organizada el portafolio técnico, categorías,
- * descripciones y precios referenciales en Soles (S/) del taller.
- * Entorno: XAMPP (PHP / MySQL)
+ * Módulo: Catálogo de Servicios (servicios.php) - DINÁMICO Y FILTRABLE
  * -------------------------------------------------------------------------
  */
-$page = 'servicios'; // Variable clave para indicar al header modular qué pestaña marcar como activa
+$page = 'servicios'; 
+require_once 'php/conexion.php';
+
+// Capturamos la categoría si viene desde el menú desplegable
+$filtro_categoria = isset($_GET['cat']) ? $_GET['cat'] : '';
+$titulo_catalogo = "Catálogo Completo de Servicios";
+
+try {
+    if (!empty($filtro_categoria)) {
+        // Lógica de filtrado dinámico según lo que se hizo clic en el menú
+        if ($filtro_categoria === 'Redes_Seguridad') {
+            $sql = "SELECT id_servicio, nombre, categoria, descripcion, precio_referencial 
+                    FROM servicios WHERE estado = 'Activo' AND categoria IN ('Redes', 'Seguridad') ORDER BY categoria, nombre";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            $titulo_catalogo = "Servicios de Redes y Seguridad";
+            
+        } elseif ($filtro_categoria === 'Software') {
+            $sql = "SELECT id_servicio, nombre, categoria, descripcion, precio_referencial 
+                    FROM servicios WHERE estado = 'Activo' AND categoria IN ('Software', 'Respaldo') ORDER BY categoria, nombre";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            $titulo_catalogo = "Software y Respaldos de Datos";
+            
+        } elseif ($filtro_categoria === 'Consultoria') {
+            $sql = "SELECT id_servicio, nombre, categoria, descripcion, precio_referencial 
+                    FROM servicios WHERE estado = 'Activo' AND categoria = 'Consultoría' ORDER BY categoria, nombre";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            $titulo_catalogo = "Consultoría Tecnológica";
+            
+        } else {
+            // Filtro exacto para Mantenimiento o Hardware
+            $sql = "SELECT id_servicio, nombre, categoria, descripcion, precio_referencial 
+                    FROM servicios WHERE estado = 'Activo' AND categoria = :cat ORDER BY categoria, nombre";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([':cat' => $filtro_categoria]);
+            $titulo_catalogo = "Servicios de " . htmlspecialchars($filtro_categoria);
+        }
+    } else {
+        // Si no hay filtro (se hizo clic en 'Servicios' principal), muestra todos
+        $sql = "SELECT id_servicio, nombre, categoria, descripcion, precio_referencial 
+                FROM servicios WHERE estado = 'Activo' ORDER BY categoria, nombre";
+        $stmt = $conn->query($sql);
+    }
+    
+    $lista_servicios = $stmt->fetchAll();
+} catch (PDOException $e) {
+    $lista_servicios = [];
+    $error_bd = "No se pudieron cargar los servicios en este momento.";
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>Servicios - Machin3 IT</title>
-    <!-- Enlace a la hoja de estilos global externa ubicada en la carpeta css/ -->
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/styles.css?v=8.0">
 </head>
 <body>
 
-    <!-- Inclusión del componente modular compartido para la barra de navegación -->
     <?php include 'includes/header.php'; ?>
 
-    <!-- Contenido del Catálogo -->
     <div class="container">
-        <h1 class="header-title">Catálogo de Servicios</h1>
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #cbd5e1; padding-bottom: 10px; margin-bottom: 30px;">
+            <h1 class="header-title" style="border: none; margin: 0; padding: 0;"><?= $titulo_catalogo ?></h1>
+            
+            <?php if (!empty($filtro_categoria)): ?>
+                <!-- Botón para limpiar el filtro si el usuario quiere ver todo -->
+                <a href="servicios.php" style="background-color: #3b82f6; color: white; padding: 8px 16px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 14px;">Ver todo el catálogo</a>
+            <?php endif; ?>
+        </div>
         
         <div class="grid">
-            <!-- Mantenimiento: Limpieza -->
-            <div class="card">
-                <div>
-                    <span class="category">Mantenimiento</span>
-                    <h3>Limpieza profunda y optimización</h3>
-                    <p class="desc">Desensamble total, eliminación de polvo, cambio de pasta térmica y optimización del flujo de aire y procesos del sistema.</p>
-                </div>
-                <div><p class="price">S/ 80.00</p><a href="solicitud.php" class="btn">Solicitar</a></div>
-            </div>
-            
-            <!-- Mantenimiento General -->
-            <div class="card">
-                <div>
-                    <span class="category">Mantenimiento</span>
-                    <h3>Mantenimiento general</h3>
-                    <p class="desc">Revisión preventiva física y lógica para evitar fallos térmicos o de rendimiento a largo plazo.</p>
-                </div>
-                <div><p class="price">S/ 60.00</p><a href="solicitud.php" class="btn">Solicitar</a></div>
-            </div>
+            <?php if (isset($error_bd)): ?>
+                <p style="color: red; text-align: center; width: 100%; grid-column: 1 / -1;"><?= htmlspecialchars($error_bd) ?></p>
+            <?php elseif (count($lista_servicios) > 0): ?>
+                
+                <?php foreach ($lista_servicios as $servicio): ?>
+                    <div class="card">
+                        <div>
+                            <span class="category"><?= htmlspecialchars($servicio['categoria']) ?></span>
+                            <h3><?= htmlspecialchars($servicio['nombre']) ?></h3>
+                            <p class="desc"><?= htmlspecialchars($servicio['descripcion']) ?></p>
+                        </div>
+                        <div>
+                            <p class="price">S/ <?= number_format($servicio['precio_referencial'], 2) ?></p>
+                            <a href="solicitud.php?id_srv=<?= $servicio['id_servicio'] ?>" class="btn">Solicitar</a>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
 
-            <!-- Hardware: Reparaciones -->
-            <div class="card">
-                <div>
-                    <span class="category">Hardware</span>
-                    <h3>Reparaciones (Hardware)</h3>
-                    <p class="desc">Diagnóstico electrónico y sustitución de componentes dañados (placas, fuentes de poder, pantallas o flex).</p>
-                </div>
-                <div><p class="price">S/ 120.00</p><a href="solicitud.php" class="btn">Solicitar</a></div>
-            </div>
-
-            <!-- Hardware: Repotenciación -->
-            <div class="card">
-                <div>
-                    <span class="category">Hardware</span>
-                    <h3>Repotenciación</h3>
-                    <p class="desc">Instalación de unidades SSD y ampliación de memoria RAM para multiplicar la velocidad operativa del equipo.</p>
-                </div>
-                <div><p class="price">S/ 70.00</p><a href="solicitud.php" class="btn">Solicitar</a></div>
-            </div>
-
-            <!-- Hardware: Ensamblaje -->
-            <div class="card">
-                <div>
-                    <span class="category">Hardware</span>
-                    <h3>Ensamblaje</h3>
-                    <p class="desc">Armado profesional de equipos a medida, gestión del cableado interno (cable management) y pruebas de estrés.</p>
-                </div>
-                <div><p class="price">S/ 150.00</p><a href="solicitud.php" class="btn">Solicitar</a></div>
-            </div>
-
-            <!-- Software: Actualizaciones -->
-            <div class="card">
-                <div>
-                    <span class="category">Software</span>
-                    <h3>Actualizaciones (S.O.)</h3>
-                    <p class="desc">Migración segura a versiones recientes de Windows o Linux garantizando la conservación íntegra de los archivos.</p>
-                </div>
-                <div><p class="price">S/ 60.00</p><a href="solicitud.php" class="btn">Solicitar</a></div>
-            </div>
-
-            <!-- Software: Instalaciones -->
-            <div class="card">
-                <div>
-                    <span class="category">Software</span>
-                    <h3>Instalaciones (Software)</h3>
-                    <p class="desc">Despliegue y configuración de Microsoft Office, antivirus, y software especializado de diseño o ingeniería.</p>
-                </div>
-                <div><p class="price">S/ 50.00</p><a href="solicitud.php" class="btn">Solicitar</a></div>
-            </div>
-
-            <!-- Software: Máquinas Virtuales -->
-            <div class="card">
-                <div>
-                    <span class="category">Software</span>
-                    <h3>Máquinas Virtuales</h3>
-                    <p class="desc">Creación de entornos virtualizados aislados (ej. VMware, VirtualBox) para pruebas de seguridad o ejecución de software heredado.</p>
-                </div>
-                <div><p class="price">S/ 90.00</p><a href="solicitud.php" class="btn">Solicitar</a></div>
-            </div>
-
-            <!-- Respaldo: Hogar -->
-            <div class="card">
-                <div>
-                    <span class="category">Respaldo</span>
-                    <h3>Respaldos (Hogar)</h3>
-                    <p class="desc">Copia de seguridad local de archivos personales a discos externos y recuperación básica de información eliminada.</p>
-                </div>
-                <div><p class="price">S/ 60.00</p><a href="solicitud.php" class="btn">Solicitar</a></div>
-            </div>
-
-            <!-- Respaldo: Empresas -->
-            <div class="card">
-                <div>
-                    <span class="category">Respaldo</span>
-                    <h3>Backups empresariales</h3>
-                    <p class="desc">Diseño e implementación de políticas de copia de seguridad automatizadas en servidores NAS o red local para empresas.</p>
-                </div>
-                <div><p class="price">S/ 250.00</p><a href="solicitud.php" class="btn">Solicitar</a></div>
-            </div>
-
-            <!-- Impresoras -->
-            <div class="card">
-                <div>
-                    <span class="category">Impresoras</span>
-                    <h3>Mantenimiento de impresoras</h3>
-                    <p class="desc">Limpieza de cabezales, destape de inyectores, reseteo de almohadillas y calibración de impresión.</p>
-                </div>
-                <div><p class="price">S/ 70.00</p><a href="solicitud.php" class="btn">Solicitar</a></div>
-            </div>
-
-            <!-- Redes -->
-            <div class="card">
-                <div>
-                    <span class="category">Redes</span>
-                    <h3>Configuración de red local</h3>
-                    <p class="desc">Implementación de cableado estructurado, configuración de switches, routers y optimización de cobertura Wi-Fi.</p>
-                </div>
-                <div><p class="price">S/ 150.00</p><a href="solicitud.php" class="btn">Solicitar</a></div>
-            </div>
-
-            <!-- Seguridad -->
-            <div class="card">
-                <div>
-                    <span class="category">Seguridad</span>
-                    <h3>Instalación de cámaras</h3>
-                    <p class="desc">Montaje físico, tendido de red y configuración de sistemas CCTV o cámaras IP con acceso remoto desde móviles.</p>
-                </div>
-                <div><p class="price">S/ 120.00</p><a href="solicitud.php" class="btn">Solicitar</a></div>
-            </div>
-
-            <!-- Gestión TI -->
-            <div class="card">
-                <div>
-                    <span class="category">Gestión TI</span>
-                    <h3>Consultoría Tecnológica</h3>
-                    <p class="desc">Asesoramiento profesional para la compra de equipos, diseño de infraestructura de red o modernización empresarial.</p>
-                </div>
-                <div><p class="price">S/ 100.00</p><a href="solicitud.php" class="btn">Solicitar</a></div>
-            </div>
-
+            <?php else: ?>
+                <p style="text-align: center; width: 100%; grid-column: 1 / -1; color: #64748b; font-size: 18px;">No hay servicios disponibles en esta categoría por el momento.</p>
+            <?php endif; ?>
         </div>
     </div>
+    
+    <?php include 'includes/footer.php'; ?>
 </body>
 </html>

@@ -1,66 +1,43 @@
 <?php
-/**
- * -------------------------------------------------------------------------
- * SISTEMA WEB DE GESTIÓN TÉCNICA - MACHIN3 IT
- * -------------------------------------------------------------------------
- * Módulo: Acceso Administrativo (login.php)
- * Descripción: Interfaz de autenticación exclusiva para administradores,
- * unificada con los estilos globales y enlace de retorno al inicio.
- * Entorno: XAMPP (PHP / MySQL)
- * -------------------------------------------------------------------------
- */
+session_start();
+if (isset($_SESSION['usuario_activo'])) {
+    header("Location: php/admin_dashboard.php");
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Acceso al Sistema - Machin3 IT</title>
-    <!-- Hoja de estilos global externa (código limpio) -->
-    <link rel="stylesheet" href="css/styles.css">
+    <title>Acceso Administrativo - Machin3 IT</title>
+    <!-- Actualizamos a v=4.0 para forzar el rediseño -->
+    <link rel="stylesheet" href="css/styles.css?v=4.0">
 </head>
-<body>
+<body style="background-color: #0f172a;">
 
-    <!-- Envoltorio para centrar la caja -->
     <div class="auth-wrapper">
         <div class="login-box">
-            <h2 class="header-title">Ingreso al Sistema</h2>
-            <p style="text-align:center; color:#64748b; font-size:13px;">Acceso exclusivo para administradores registrados.</p>
+            <h2 class="header-title">Acceso al Sistema</h2>
+            <p style="color: #64748b; font-size: 14px; margin-bottom: 25px;">Área exclusiva para personal de Machin3 IT.</p>
             
-            <?php if (isset($_GET['error'])): ?>
-                <p style="color:#b91c1c; background:#fef2f2; padding:10px; border-radius:6px; font-size:13px; text-align:center;">
-                    <?php
-                    $mensajes = [
-                        'datos' => 'Complete usuario y contraseña.',
-                        'credenciales' => 'Usuario o contraseña incorrectos.',
-                        'servidor' => 'No fue posible procesar el acceso. Intente nuevamente.'
-                    ];
-                    echo htmlspecialchars($mensajes[$_GET['error']] ?? 'No fue posible iniciar sesión.');
-                    ?>
-                </p>
-            <?php elseif (isset($_GET['registro']) && $_GET['registro'] === 'ok'): ?>
-                <p style="color:#166534; background:#f0fdf4; padding:10px; border-radius:6px; font-size:13px; text-align:center;">
-                    Administrador registrado correctamente. Ya puede iniciar sesión.
-                </p>
-            <?php endif; ?>
-
             <form action="php/procesar_login.php" method="POST">
                 <div class="form-group">
                     <label>Usuario:</label>
-                    <input type="text" name="usuario" placeholder="Ej. admin" required>
+                    <input type="text" name="usuario" required placeholder="Ingresa tu usuario">
                 </div>
-                
                 <div class="form-group">
                     <label>Contraseña:</label>
-                    <input type="password" name="contrasena" placeholder="••••••••" required>
+                    <input type="password" name="contrasena" required placeholder="••••••••">
                 </div>
-
-                <button type="submit" class="btn-submit">Ingresar</button>
+                <button type="submit" class="btn-submit">Iniciar Sesión</button>
             </form>
-
-            <a href="registro.php" class="back-home" style="margin-top: 15px;">Registrar nuevo usuario</a>
-            <a href="index.php" class="back-home">← Volver a la página principal</a>
+            
+            <!-- Aquí está restaurado tu enlace de registro -->
+            <a href="registro.php" style="display: block; text-align: center; margin-top: 15px; font-size: 14px; font-weight: bold; color: #3b82f6; text-decoration: none;">Registrar nuevo usuario</a>
+            
+            <a href="index.php" class="back-home">← Volver al sitio público</a>
         </div>
     </div>
-
+<?php include 'includes/footer.php'; ?>
 </body>
 </html>

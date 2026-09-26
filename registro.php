@@ -61,6 +61,6 @@
             <a href="login.php" class="back-home">¿Ya tienes cuenta? Inicia sesión aquí</a>
         </div>
     </div>
-
+<?php include 'includes/footer.php'; ?>
 </body>
 </html>
